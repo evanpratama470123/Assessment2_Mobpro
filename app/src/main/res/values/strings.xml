@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CicilUang</string>
+    <string name="list_kosong">Silahkan tambah tabungan!</string>
 </resources>

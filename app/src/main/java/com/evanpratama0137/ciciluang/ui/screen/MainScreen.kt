@@ -54,12 +54,17 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = viewModel()
     val data = viewModel.data
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize()
-    ) {
-        items(data) {
-            ListItem(it)
-            HorizontalDivider()
+    if (data.isEmpty()) {
+        EmptyStateTabungan()
+    }
+    else {
+        LazyColumn(
+            modifier = modifier.fillMaxSize()
+        ) {
+            items(data) {
+                ListItem(it)
+                HorizontalDivider()
+            }
         }
     }
 }
