@@ -49,4 +49,8 @@ class MainViewModel : ViewModel() {
             "2025-05-05"
         )
     )
+
+    fun getCatatan(id: Long): Tabungan? {
+        return data.find { it.id == id }
+    }
 }

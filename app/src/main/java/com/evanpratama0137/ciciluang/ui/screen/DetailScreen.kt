@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,16 +32,30 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.evanpratama0137.ciciluang.R
 import com.evanpratama0137.ciciluang.ui.theme.CicilUangTheme
 
+const val KEY_ID_TABUNGAN = "idTabungan"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavHostController) {
+fun DetailScreen(navController: NavHostController, id: Long? = null) {
+    val viewModel: MainViewModel = viewModel()
+
     var namaTabungan by remember { mutableStateOf("") }
     var jumlahTabungan by remember { mutableStateOf("") }
+    var deskripsiTabungan by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        if (id == null) return@LaunchedEffect
+        val data = viewModel.getCatatan(id) ?: return@LaunchedEffect
+        namaTabungan = data.nama
+        jumlahTabungan = data.jumlah.toString()
+        deskripsiTabungan = data.deskripsi
+    }
 
     Scaffold(
         topBar = {
@@ -55,7 +70,10 @@ fun DetailScreen(navController: NavHostController) {
                     }
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.tambah_catatan))
+                    if (id == null)
+                        Text(text = stringResource(id = R.string.tambah_tabungan))
+                    else
+                        Text(text = stringResource(id = R.string.edit_tabungan))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -78,6 +96,8 @@ fun DetailScreen(navController: NavHostController) {
             onNamaTabunganChange = { namaTabungan = it },
             jumlahTabungan = jumlahTabungan,
             onJumlahTabunganChange = { jumlahTabungan = it },
+            deskripsiTabungan = deskripsiTabungan,
+            onDeskripsiTabunganChange = { deskripsiTabungan = it },
             modifier = Modifier.padding(padding)
         )
     }
@@ -96,6 +116,7 @@ fun DetailScreenPreview() {
 fun FormCatatan(
     namaTabungan: String, onNamaTabunganChange: (String) -> Unit,
     jumlahTabungan: String, onJumlahTabunganChange: (String) -> Unit,
+    deskripsiTabungan: String, onDeskripsiTabunganChange: (String) -> Unit,
     modifier: Modifier
 ) {
     Column(
@@ -119,8 +140,19 @@ fun FormCatatan(
             label = { Text(text = stringResource(R.string.jumlah_tabungan)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
             ),
             modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = deskripsiTabungan,
+            onValueChange = { onDeskripsiTabunganChange(it) },
+            label = { Text(text = stringResource(R.string.deskripsi_tabungan)) },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Done
+            ),
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

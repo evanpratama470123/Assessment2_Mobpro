@@ -2,12 +2,13 @@
     <string name="app_name">CicilUang</string>
     <string name="list_kosong">Silahkan tambah tabungan!</string>
     <string name="x_diklik">%1$s diklik!</string>
-    <string name="tambah_catatan">Tambah catatan</string>
+    <string name="tambah_tabungan">Tambah Tabungan</string>
     <string name="nama_tabungan">Nama Tabungan</string>
     <string name="jumlah_tabungan">Jumlah Tabungan</string>
     <string name="deskripsi_tabungan">Deskripsi Tabungan</string>
     <string name="tanggal_tabungan">Tanggal Tabungan</string>
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
+    <string name="edit_tabungan">Edit Tabungan</string>
 
 </resources>

@@ -63,21 +63,20 @@ fun MainScreen(navController: NavHostController) {
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.tambah_catatan),
+                    contentDescription = stringResource(R.string.tambah_tabungan),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
     ) { innerPadding ->
-        ScreenContent(Modifier.padding(innerPadding))
+        ScreenContent(Modifier.padding(innerPadding), navController)
     }
 }
 
 @Composable
-fun ScreenContent(modifier: Modifier = Modifier) {
+fun ScreenContent(modifier: Modifier, navController: NavHostController) {
     val viewModel: MainViewModel = viewModel()
     val data = viewModel.data
-    val context = LocalContext.current
 
     if (data.isEmpty()) {
         EmptyStateTabungan()
@@ -89,8 +88,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         ) {
             items(data) {
                 ListItem(it) {
-                    val pesan = context.getString(R.string.x_diklik, it.nama)
-                    Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.FormUbah.withId(it.id))
                 }
                 HorizontalDivider()
             }
