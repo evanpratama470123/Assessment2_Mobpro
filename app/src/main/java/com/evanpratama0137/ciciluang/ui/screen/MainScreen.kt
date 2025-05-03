@@ -1,6 +1,8 @@
 package com.evanpratama0137.ciciluang.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +56,7 @@ fun MainScreen() {
 fun ScreenContent(modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = viewModel()
     val data = viewModel.data
+    val context = LocalContext.current
 
     if (data.isEmpty()) {
         EmptyStateTabungan()
@@ -62,7 +66,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             modifier = modifier.fillMaxSize()
         ) {
             items(data) {
-                ListItem(it)
+                ListItem(it) {
+                    val pesan = context.getString(R.string.x_diklik, it.nama)
+                    Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+                }
                 HorizontalDivider()
             }
         }
@@ -70,9 +77,11 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ListItem(tabungan: Tabungan) {
+fun ListItem(tabungan: Tabungan, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier.fillMaxWidth()
+            .clickable { onClick() }
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
