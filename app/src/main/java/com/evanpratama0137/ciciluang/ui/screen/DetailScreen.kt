@@ -43,7 +43,6 @@ import androidx.navigation.compose.rememberNavController
 import com.evanpratama0137.ciciluang.R
 import com.evanpratama0137.ciciluang.ui.theme.CicilUangTheme
 import com.evanpratama0137.ciciluang.util.ViewModelFactory
-import java.nio.file.Files.delete
 
 const val KEY_ID_TABUNGAN = "idTabungan"
 
@@ -57,6 +56,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
     var namaTabungan by remember { mutableStateOf("") }
     var jumlahTabungan by remember { mutableStateOf("") }
     var deskripsiTabungan by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (id == null) return@LaunchedEffect
@@ -108,8 +108,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                     }
                     if (id != null) {
                         DeleteAction {
-                            viewModel.delete(id)
-                            navController.popBackStack()
+                            showDialog = true
                         }
                     }
                 }
@@ -125,6 +124,15 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
             onDeskripsiTabunganChange = { deskripsiTabungan = it },
             modifier = Modifier.padding(padding)
         )
+
+        if (id != null && showDialog) {
+            DisplayAlertDialog(
+                onDismissRequest = { showDialog = false}) {
+                showDialog = false
+                viewModel.delete(id)
+                navController.popBackStack()
+            }
+        }
     }
 }
 
