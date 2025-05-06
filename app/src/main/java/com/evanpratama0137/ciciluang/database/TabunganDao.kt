@@ -18,4 +18,11 @@ interface TabunganDao {
 
     @Query("SELECT * FROM tabungan ORDER BY jumlah DESC")
     fun getTabungan(): Flow<List<Tabungan>>
+
+    @Query("SELECT * FROM tabungan WHERE id = :id")
+    suspend fun getTabunganById(id: Long): Tabungan?
+
+    @Query("DELETE FROM tabungan WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
 }

@@ -27,7 +27,27 @@ class DetailViewModel(private val dao: TabunganDao) : ViewModel()  {
         }
     }
 
-    fun getCatatan(id: Long): Tabungan? {
-        return null
+    suspend fun getTabungan(id: Long): Tabungan? {
+        return dao.getTabunganById(id)
+    }
+
+    fun update(id: Long, nama: String, jumlah: Int, deskripsi: String) {
+        val tabungan = Tabungan(
+            id = id,
+            nama = nama,
+            jumlah = jumlah,
+            deskripsi = deskripsi,
+            tanggal = formatter.format(Date())
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.update(tabungan)
+        }
+    }
+
+    fun delete(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.deleteById(id)
+        }
     }
 }

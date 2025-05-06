@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import com.evanpratama0137.ciciluang.R
 import com.evanpratama0137.ciciluang.ui.theme.CicilUangTheme
 import com.evanpratama0137.ciciluang.util.ViewModelFactory
+import java.nio.file.Files.delete
 
 const val KEY_ID_TABUNGAN = "idTabungan"
 
@@ -56,7 +60,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
 
     LaunchedEffect(Unit) {
         if (id == null) return@LaunchedEffect
-        val data = viewModel.getCatatan(id) ?: return@LaunchedEffect
+        val data = viewModel.getTabungan(id) ?: return@LaunchedEffect
         namaTabungan = data.nama
         jumlahTabungan = data.jumlah.toString()
         deskripsiTabungan = data.deskripsi
@@ -92,6 +96,8 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                         }
                         if (id==null) {
                             viewModel.insert(namaTabungan, jumlahTabungan.toInt(), deskripsiTabungan)
+                        } else {
+                            viewModel.update(id, namaTabungan, jumlahTabungan.toInt(), deskripsiTabungan)
                         }
                         navController.popBackStack() }) {
                         Icon(
@@ -99,6 +105,12 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                             contentDescription = stringResource(R.string.simpan),
                             tint = MaterialTheme.colorScheme.primary
                         )
+                    }
+                    if (id != null) {
+                        DeleteAction {
+                            viewModel.delete(id)
+                            navController.popBackStack()
+                        }
                     }
                 }
             )
@@ -113,6 +125,32 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
             onDeskripsiTabunganChange = { deskripsiTabungan = it },
             modifier = Modifier.padding(padding)
         )
+    }
+}
+
+@Composable
+fun DeleteAction(delete: () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    IconButton(onClick = { expanded = true}) {
+        Icon(
+            imageVector = Icons.Filled.MoreVert,
+            contentDescription = stringResource(R.string.lainnya),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false}
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(text = stringResource(R.string.hapus))
+                },
+                onClick = {
+                    expanded = false
+                    delete()
+                }
+            )
+        }
     }
 }
 

@@ -11,5 +11,7 @@
     <string name="simpan">Simpan</string>
     <string name="edit_tabungan">Edit Tabungan</string>
     <string name="invalid">Nama tabungan, jumlah, dan deskripsi tidak boleh kosong.</string>
+    <string name="lainnya">Opsi lainnya</string>
+    <string name="hapus">Hapus Tabungan</string>
 
 </resources>
