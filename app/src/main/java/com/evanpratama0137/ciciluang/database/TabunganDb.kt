@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.evanpratama0137.ciciluang.model.Tabungan
 
-@Database(entities = [Tabungan::class], version = 1, exportSchema = false)
+@Database(entities = [Tabungan::class], version = 2, exportSchema = false)
 abstract class TabunganDb : RoomDatabase() {
 
     abstract val dao: TabunganDao
@@ -25,7 +25,8 @@ abstract class TabunganDb : RoomDatabase() {
                         context.applicationContext,
                         TabunganDb::class.java,
                         "tabungan_db"
-                    ).build()
+                    )
+                        .build()
                     INSTANCE = instance
                 }
                 return instance

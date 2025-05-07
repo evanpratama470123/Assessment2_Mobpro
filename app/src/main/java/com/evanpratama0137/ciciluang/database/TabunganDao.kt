@@ -24,5 +24,4 @@ interface TabunganDao {
 
     @Query("DELETE FROM tabungan WHERE id = :id")
     suspend fun deleteById(id: Long)
-
 }
